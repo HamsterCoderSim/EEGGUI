@@ -1,7 +1,12 @@
 classdef TimeDomain
-    %UNTITLED7 此处显示有关此类的摘要
-    %   此处显示详细说明
-    
+    %TimeDomain这个类是实现GUI界面中的数据载入与波形显示的类
+    %   DataDisplay         是显示脑电数据的函数
+    %   DataLoadFunction    是载入脑电数据的函数
+    %   dataLoadNum         是每个被试者载入的数据格式要求为：subject x trail x channel x trail三维格式的数据
+    %   channelNum          是脑电数据中的通道数
+    %   trailNum            是做的实验的次数
+    %   subjectNum          是被试者数目
+    %   dataDispNum         是要显示的脑电数据，是一个向量：某次实验 x 某个通道 x duration
     properties
         dataLoadNum
         dataDispNum
