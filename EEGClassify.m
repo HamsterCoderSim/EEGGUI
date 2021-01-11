@@ -65,7 +65,7 @@ classdef EEGClassify
         end
         function obj = SVMClassify(obj)
             % ---------设置参数，训练模型-----------
-            dfile = '日志文件.txt';
+            dfile = 'MyLog.txt';
             if exist(dfile, 'file'); delete dfile; end
             diary(dfile)
             diary on
