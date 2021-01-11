@@ -52,6 +52,7 @@ classdef TimeDomain
                 trailNum = size(dataLoad, 1);
                 dataLoad = reshape(dataLoad, [1, size(dataLoad, 1), size(dataLoad, 2), size(dataLoad, 3)]);     
             else
+                h = waitbar(0, '开始导入', 'Name','进度条', 'WindowStyle', 'modal');
                 for k=1:numel(FileName)
                     filePath = [PathName, FileName{k}];
                     data = load(filePath);
@@ -63,9 +64,13 @@ classdef TimeDomain
                         trailNum = size(data, 1);
                     end
                     dataLoad(k, : , :,1:signalLen) = data;
+                    waitbar(k/numel(FileName), h, ['已导入' num2str(k) '人']);
                 end
                 subjectNum = numel(FileName);
-            end   
+            end
+            close(h)
+            delete(h);
+            clear h;
         end
     end
 end
