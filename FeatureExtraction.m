@@ -9,19 +9,19 @@ classdef FeatureExtraction
     end
     
     methods
-        function obj = FeatureExtraction(timeDomObj, fsString, feaString, lamp)
-            lamp.Color = 'red';
+        function obj = FeatureExtraction(timeDomObj, fsString, feaString)
              %--------------------提取合适的特征值------------------------
             eegDataNum = struct('dataLoad', timeDomObj.dataLoadNum, 'subjectNum',...
                 timeDomObj.subjectNum, 'trailNum', timeDomObj.trailNum, 'channelNum',...
                 timeDomObj.channelNum, 'fs', str2double(fsString));
-            if feaString == "微分熵"; obj = obj.DeExtraction(eegDataNum, lamp); end
+            if feaString == "微分熵"; obj = obj.DeExtraction(eegDataNum); end
         end
-        function obj = DeExtraction(obj, eegDataNum, lamp)
-            lamp.Color = 'red';
+        function obj = DeExtraction(obj, eegDataNum)
             windowLength = size(eegDataNum.dataLoad, 2)/2;
             Parameters.data = eegDataNum.dataLoad;
+            h = waitbar(0, '特征提取', 'Name','进度条', 'WindowStyle', 'modal');
             for subject = 1:eegDataNum.subjectNum
+                waitbar(subject/(eegDataNum.subjectNum), h, ['已提取' num2str(subject*100/(eegDataNum.subjectNum)) '%']);
                 for trail = 1:eegDataNum.trailNum                   
                     Parameters.Fs = eegDataNum.fs; Parameters.nOverlap =0; 
                     Parameters.Nfft = eegDataNum.fs;     %滤波后还用128？
@@ -42,6 +42,9 @@ classdef FeatureExtraction
                 end
             end
             obj.featureData = featureDataVal;
+            close(h)
+            delete(h);
+            clear h;
         end
         function obj = FeatureDisplay(obj, eegFeatureData,subjectSel, trailSel, channelSel)
             %根据GUI界面上的选择来调整数据
