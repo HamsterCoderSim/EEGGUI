@@ -1,14 +1,2 @@
-Cross Validation Accuracy = 54.3527%
-Cross Validation Accuracy = 54.3527%
-Cross Validation Accuracy = 54.3527%
-Cross Validation Accuracy = 54.3527%
-Cross Validation Accuracy = 54.3527%
-Cross Validation Accuracy = 54.3527%
-Accuracy = 57.5521% (8840/15360) (classification)
-Cross Validation Accuracy = 54.3527%
-Cross Validation Accuracy = 54.3527%
-Cross Validation Accuracy = 54.3527%
-Cross Validation Accuracy = 54.3527%
-Cross Validation Accuracy = 54.3527%
-Cross Validation Accuracy = 54.3527%
-Accuracy = 57.5521% (8840/15360) (classification)
+
+
