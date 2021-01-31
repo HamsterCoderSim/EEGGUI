@@ -1,0 +1,37 @@
+macOS, tested on Sierra 10.12.6
+Step 1: create libxgboost.so
+Follow these instructions: https://xgboost.readthedocs.io/en/latest/build.html#build-the-shared-library
+  - make folder ~/xgboost (e.g.)
+  - git clone --recursive https://github.com/dmlc/xgboost
+  - install cmake. it is installed as dependency of libomp, which can be installed via brew:
+       = /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+	     (see https://brew.sh/)
+       = brew install libomp
+	   = find the xcode version which is compatible with your Matlab version and OS version
+	     (see https://www.mathworks.com/support/requirements/previous-releases.html, for Matlab 2019a on Sierra 10.12.6 it was version 9.2)
+	   = download the xcode version
+	     (see https://xcodereleases.com/)
+  - In Terminal, go to folder ~/xgboost. In it execute: 
+              mkdir build
+              cd build
+              cmake .. -DUSE_OPENMP=OFF
+              make -j4
+			  (note: enabling OPENMP resulted in a crash, so I disabled it by providing -DUSE_OPENMP=OFF)
+
+      Result:
+      libxgboost.dylib is created here: "~/xgboost/lib/libxgboost.dylib"
+
+Step 2: get a header file:
+  - download header file: https://raw.githubusercontent.com/dmlc/xgboost/master/include/xgboost/c_api.h
+  - save it to "~/xgboost/lib"
+  - in c_api.h, change the line "define XGB_DLL XGB_EXTERN_C _attribute_ ((visibility ("default")))" into "define XGB_DLL XGB_EXTERN_C"
+  - rename c_api.h to xgboost.h
+  - rename libxgboost.dylib to xgboost.dylib
+
+      Result:
+      xgboost.h is created here: "~/xgboost/lib/xgboost.h"
+      xgboost.dylib is created here: "~/xgboost/lib/xgboost.so"
+
+Step 3: run the example which is provided in comments in the script (xgboost_train.m)
+- In xgboost_test.m and xgboost_train.m, change D:\r\xgboost\lib to the location of xgboost (for example: ~/xgboost)
+- The script utilizes an explanation on "Using XGBOOST in c++" provided here: https://stackoverflow.com/questions/36071672/using-xgboost-in-c
