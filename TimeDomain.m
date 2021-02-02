@@ -55,9 +55,17 @@ classdef TimeDomain
                 dataName = fieldnames(data);
                 dataLoad = data.('data');
                 obj.subjectNum = 1;
-                obj.channelNum = size(dataLoad, 2);
-                obj.trailNum = size(dataLoad, 1);
-                obj.dataLoad = reshape(dataLoad, [1, size(dataLoad, 1), size(dataLoad, 2), size(dataLoad, 3)]);
+                if numel(size(dataLoad)) > 2
+                    obj.channelNum = size(dataLoad, 2);
+                    obj.trailNum = size(dataLoad, 1);
+                    obj.durationNum = size(dataLoad, 3);
+                    obj.dataLoad = reshape(dataLoad, [1, size(dataLoad, 1), size(dataLoad, 2), size(dataLoad, 3)]);
+                else
+                    obj.channelNum = size(dataLoad, 1);
+                    obj.durationNum = size(dataLoad, 2);
+                    obj.trailNum = 1;
+                    obj.dataLoad = reshape(dataLoad, [1, 1, size(dataLoad, 1), size(dataLoad, 2)]);
+                end
             else
                 h = waitbar(0, '开始导入', 'Name','进度条', 'WindowStyle', 'modal');
                 for k=1:numel(FileName)
@@ -65,12 +73,21 @@ classdef TimeDomain
                     data = load(filePath);
                     dataName = fieldnames(data);
                     data = data.('data');
-                    if k==1     %以第一次输入的长度为准
-                        obj.durationNum = size(data, 3);
-                        obj.channelNum = size(data, 2);
-                        obj.trailNum = size(data, 1);
+                    if numel(size(data)) > 2
+                        if k==1     %以第一次输入的长度为准
+                            obj.durationNum = size(data, 3);
+                            obj.channelNum = size(data, 2);
+                            obj.trailNum = size(data, 1);
+                        end
+                        obj.dataLoad(k, : , :,1:obj.durationNum) = data;
+                    else
+                        if k==1     %以第一次输入的长度为准
+                            obj.durationNum = size(data, 2);
+                            obj.channelNum = size(data, 1);
+                            obj.trailNum = 1;
+                        end
+                        obj.dataLoad(k, : , :, 1:obj.durationNum) = data;
                     end
-                    obj.dataLoad(k, : , :,1:obj.durationNum) = data;
                     waitbar(k/numel(FileName), h, ['已导入' num2str(k) '人']);
                 end
                 obj.subjectNum = numel(FileName);

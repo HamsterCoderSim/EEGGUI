@@ -1,6 +1,9 @@
 classdef FeatureExtraction
-    %FeatureExtraction是GUI界面中的特征提取模块
-    %   此处显示详细说明
+    %FeatureExtraction    是GUI界面中的特征提取模块
+    %   featureData       是提取出的特征，数据格式为subject x trail x channel x duration
+    %   eegDataNum        是用来接收TimeDomain这个类中传过来的数据，结构体中变量名字和TimeDomain中的一致
+    %   FeatureExtraction 是构造函数，在这个构造函数中接收原始EEG
+    %   DeExtraction      是提取脑电的微分熵特征函数
     
     properties
         featureData
@@ -45,15 +48,6 @@ classdef FeatureExtraction
             close(h)
             delete(h);
             clear h;
-        end
-        function obj = FeatureDisplay(obj, eegFeatureData,subjectSel, trailSel, channelSel)
-            %根据GUI界面上的选择来调整数据
-            %   此处显示详细说明
-            subjectSel = str2double(subjectSel); trailSel = str2double(trailSel);
-            channelSel = str2double(channelSel);
-            featureDataDispTemp = eegFeatureData(subjectSel, trailSel, channelSel, :);
-            featureDataDispTemp = reshape(featureDataDispTemp, [size(featureDataDispTemp, 3), size(featureDataDispTemp, 4)]);
-            obj.featureDataDisp = featureDataDispTemp;
         end
     end
 end

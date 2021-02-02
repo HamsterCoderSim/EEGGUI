@@ -1,8 +1,27 @@
-classdef EEGClassify
-    %UNTITLED 此处显示有关此类的摘要
-    %   此处显示详细说明
+classdef EEGClassify 
+    %EEGClassify 对数据进行分类的一个类
+    %   classifyData     面板上的导入数据按钮导入的特征数据
+    %   classifyLabel    面板上的导入标签按钮导入的标签数据
+    %   trainData        训练集数据
+    %   trainLabel       训练集标签
+    %   testData         测试集数据
+    %   testLabel        测试集标签
+    %   labelSubject     导入的标签数据中的被试者个数
+    %   labelTrail       导入的标签数据中的实验个数
+    %   dataSubject      导入的特征数据中的被试者个数
+    %   dataTrail        导入的特征数据中的实验个数
+    %   FeatureLoad      导入特征的函数
+    %   LabelLoad        导入标签的函数
+    %   MainClassify     主要的分类函数：数据分割、数据分类、准确率展示
+    %   LeaveOneSubject  使用留一法对数据进行分割->训练集、测试集
+    %   NormalDataSplit  使用普通的分类方法，即普通的按比例分类
+    %   FeatureClassify  将分类的方法全都放在这里写
+    %   ****Classify     具体的分类方法
+    %   AccuracyDisp     将最后的分类准确率展示到面板上
     
     properties
+        labelLoadFlag = false
+        dataLoadFlag = false
         classifyData
         classifyLabel
         classifyAccuracy
@@ -10,14 +29,9 @@ classdef EEGClassify
         trainLabel
         testData
         testLabel
-        labelSubject
-        labelTrail
-        dataSubject
-        dataTrail
     end
-    
     methods
-        function obj =  FeatureLoad(obj, showArea)
+        function obj =  FeatureLoad(obj)
             [FileName, PathName] = uigetfile('.mat', 'MultiSelect','on');
             data = load([PathName, FileName]);
             h = waitbar(0, '特征提取', 'Name','进度条', 'WindowStyle', 'modal');
@@ -28,14 +42,9 @@ classdef EEGClassify
             close(h)
             delete(h);
             clear h;
-            obj.dataSubject = size(obj.classifyData, 1);
-            obj.dataTrail = size(obj.classifyData, 2);
-            showArea.SubjectNum.Text = num2str(size(obj.classifyData, 1)); 
-            showArea.TrailNum.Text = num2str(size(obj.classifyData, 2));
-            showArea.ChannelNum.Text = num2str(size(obj.classifyData, 3)); 
-            showArea.Duration.Text = num2str(size(obj.classifyData, 4));
+            obj.dataLoadFlag = true;
         end
-        function obj = LabelLoad(obj, showArea)
+        function obj = LabelLoad(obj)
             [FileName, PathName] = uigetfile('.mat', 'MultiSelect','on');
             h = waitbar(0, '特征提取', 'Name','进度条', 'WindowStyle', 'modal');
             label = load([PathName, FileName]);
@@ -46,10 +55,7 @@ classdef EEGClassify
             close(h)
             delete(h);
             clear h;
-            obj.labelSubject = size(obj.classifyLabel, 1);
-            obj.labelTrail = size(obj.classifyLabel, 2);
-            showArea.SubjectNum.Text = num2str(size(obj.classifyLabel, 1)); 
-            showArea.TrailNum.Text = num2str(size(obj.classifyLabel, 2));
+            obj.labelLoadFlag = true;
         end
         function obj = LeaveOneDataSplit(obj, methodSel, dataSel, leaveObj)
             %---先对数据进行调整，选择想要的数据---
