@@ -213,7 +213,6 @@ classdef EEGClassify
         end
         function obj = XGBClassify(obj)
             %----使用XGBoost进行分类-----
-            params = struct;
             params.booster           = 'gbtree';
             params.objective         = 'binary:logistic';
             params.eta               = 0.1;
